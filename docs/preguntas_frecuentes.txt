@@ -1,0 +1,29 @@
+P: ¿Cuál es el horario de atención?
+R: Nuestro horario de atención es de lunes a viernes de 8:00 a.m. a 6:00 p.m.
+
+P: ¿Cómo puedo restablecer mi contraseña?
+R: Para restablecer tu contraseña, ve a la página de inicio de sesión y haz clic en "¿Olvidaste tu contraseña?". Sigue los pasos que te indicará el sistema.
+
+P: ¿Dónde puedo ver el estado de mi pedido?
+R: Puedes ver el estado de tu pedido iniciando sesión en tu cuenta y visitando la sección "Mis pedidos".
+
+P: ¿Cuánto tiempo tarda el envío?
+R: El tiempo estimado de envío es de 3 a 5 días hábiles para entregas nacionales.
+
+P: ¿Puedo cambiar la dirección de entrega?
+R: Sí, puedes cambiar la dirección de entrega siempre y cuando el pedido no haya sido despachado. Para hacerlo, comunícate con nuestro equipo de soporte.
+
+P: ¿Qué métodos de pago aceptan?
+R: Aceptamos pagos con tarjetas de crédito, débito, PSE y transferencias bancarias.
+
+P: ¿Tienen política de devoluciones?
+R: Sí, aceptamos devoluciones dentro de los primeros 15 días después de la entrega, siempre y cuando el producto esté en buen estado y sin uso.
+
+P: ¿Dónde puedo contactar al soporte técnico?
+R: Puedes contactarnos al correo soporte@ejemplo.com o por medio de nuestro chat en línea disponible en la página web.
+
+P: ¿Ofrecen garantía en sus productos?
+R: Sí, todos nuestros productos tienen garantía mínima de 6 meses. Puedes consultar los detalles en la página del producto.
+
+P: ¿Qué hago si mi pedido llega incompleto o dañado?
+R: Si tu pedido llega incompleto o dañado, por favor contáctanos inmediatamente con fotos del producto y del empaque para ayudarte a resolverlo lo antes posible.
