@@ -9,8 +9,9 @@ import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
 import { MemoryVectorStore } from "langchain/vectorstores/memory";
 import { createRetrievalChain } from "langchain/chains/retrieval";
 import { createStuffDocumentsChain } from "langchain/chains/combine_documents";
-import { ChatPromptTemplate } from "@langchain/core/prompts";
-
+import { ChatPromptTemplate, MessagesPlaceholder } from "@langchain/core/prompts";
+import { createHistoryAwareRetriever } from "langchain/chains/history_aware_retriever";
+import { HumanMessage, AIMessage } from "@langchain/core/messages";
 
 // --- 1. Configuración del Modelo y Embeddings ---
 const model = new ChatOpenAI({
@@ -56,58 +57,93 @@ async function createVectorStoreAndRetriever(documents) {
     return vectorStore.asRetriever();
 }
 
-// --- 4. Creación de la Cadena RetrievalQA ---
+// --- 4. Creación de la Cadena RetrievalQA con Memoria Conversacional ---
 async function createRetrievalQAChain(llm, retriever) {
-    console.log("Creando cadena RetrievalQA...");
+    console.log("Creando cadena RetrievalQA con memoria conversacional...");
     
-    // Create a prompt template for the question answering
-    const prompt = ChatPromptTemplate.fromMessages([
-        ["system", `Usa el conexto dado para responder la pregunta.
-Si no sabes la respuesta, dí que no sabes.
-Usa tres oraciones como maximo  manten una respuesta concisa.
+    // Create a history-aware retriever
+    const historyAwarePrompt = ChatPromptTemplate.fromMessages([
+        new MessagesPlaceholder("chat_history"),
+        ["user", "{input}"],
+        ["user", "Dada la conversación anterior y una nueva pregunta del usuario que podría hacer referencia al contexto en el historial de chat, formula una pregunta independiente que se pueda entender sin el historial de chat. NO respondas la pregunta, solo reformúlala si es necesario y de lo contrario devuélvela tal como está."],
+    ]);
+
+    const historyAwareRetriever = await createHistoryAwareRetriever({
+        llm,
+        retriever,
+        rephrasePrompt: historyAwarePrompt,
+    });
+
+    // Create a prompt template for the question answering with chat history
+    const qaPrompt = ChatPromptTemplate.fromMessages([
+        ["system", `Eres un asistente útil que responde preguntas basándose en el contexto proporcionado y el historial de la conversación.
+
+Usa el contexto dado para responder la pregunta del usuario.
+Si no sabes la respuesta basándote en el contexto, dí que no sabes.
+Usa tres oraciones como máximo y mantén una respuesta concisa.
+Ten en cuenta el historial de la conversación para proporcionar respuestas coherentes y contextualmente relevantes.
 
 Context: {context}`],
-        ["human", "{input}"]
+        new MessagesPlaceholder("chat_history"),
+        ["user", "{input}"],
     ]);
 
     // Create the document chain
     const questionAnswerChain = await createStuffDocumentsChain({
         llm,
-        prompt: prompt,
+        prompt: qaPrompt,
     });
 
-    // Create the retrieval chain
+    // Create the retrieval chain with history awareness
     const chain = await createRetrievalChain({
-        retriever,
+        retriever: historyAwareRetriever,
         combineDocsChain: questionAnswerChain,
     });
     
-    console.log("Cadena createRetrievalChain creada.");
+    console.log("Cadena RetrievalQA con memoria conversacional creada.");
     return chain;
 }
 
-// --- 5. Interfaz de Línea de Comandos (CLI) ---
+// --- 5. Interfaz de Línea de Comandos (CLI) con Memoria Conversacional ---
 async function startCLI(_chain) {
     const rl = readline.createInterface({
         input: process.stdin,
         output: process.stdout,
     });
 
+    // Array para almacenar el historial de la conversación
+    const chatHistory = [];
+
     console.log("\n🤖 Pregúntame sobre preguntas frecuentes. Escribe 'salir' para terminar.");
+    console.log("💭 Ahora puedo recordar nuestra conversación anterior para darte respuestas más contextuales.");
 
     const promptUser = () => {
         rl.question("\nPregunta: ", async (input) => {
             if (input.toLowerCase() === "salir") {
-                console.log("¡Hasta luego!");
+                console.log("¡Hasta luego! Ha sido un placer conversar contigo.");
                 rl.close();
                 return;
             }
 
             try {
-                const response = await _chain.invoke({ input });
-                // The new createRetrievalChain returns an object with an 'answer' property
+                // Invoke the chain with input and chat history
+                const response = await _chain.invoke({ 
+                    input: input,
+                    chat_history: chatHistory
+                });
+                
                 const answer = response.answer;
                 console.log("Respuesta:", answer);
+
+                // Add the current interaction to chat history
+                chatHistory.push(new HumanMessage(input));
+                chatHistory.push(new AIMessage(answer));
+
+                // Limit chat history to last 10 messages (5 exchanges) to avoid token limits
+                if (chatHistory.length > 10) {
+                    chatHistory.splice(0, 2);
+                }
+
             } catch (err) {
                 console.error("Error al procesar la pregunta:", err.message ?? err);
             }
