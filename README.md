@@ -129,7 +129,7 @@ Pregunta: salir
 El chatbot implementa memoria conversacional mediante:
 
 1. **Historial de Chat**: Almacena las últimas 5 interacciones (10 mensajes)
-2. **Contexto Consciente**: Reformula preguntas ambiguas basándose en el historial
+2. **Contexto Consciente**: Reformula preguntas basándose en el historial
 3. **Respuestas Coherentes**: Considera conversaciones anteriores para mantener coherencia
 4. **Gestión de Memoria**: Limita el historial para evitar exceder límites de tokens
 
