@@ -1,0 +1,37 @@
+{
+  "name": "pruebachatbot-cpocket",
+  "version": "1.0.0",
+  "description": "Construir un asistente conversacional con **Langchain** que responda preguntas frecuentes usando un conjunto de documentos de texto como fuente de conocimiento.",
+  "main": "index.js",
+  "type": "module",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thiagoCpocket/PruebaChatbot-Cpocket.git"
+  },
+  "keywords": [
+    "langchain",
+    "chatbot",
+    "openai"
+  ],
+  "author": "Diego Peña",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/thiagoCpocket/PruebaChatbot-Cpocket/issues"
+  },
+  "homepage": "https://github.com/thiagoCpocket/PruebaChatbot-Cpocket#readme",
+  "dependencies": {
+    "@gomomento/sdk-core": "^1.111.0",
+    "@langchain/community": "^0.3.44",
+    "@langchain/openai": "^0.5.11",
+    "dotenv": "^16.5.0",
+    "langchain": "^0.3.27"
+  },
+  "devDependencies": {}
+}
