@@ -46,7 +46,7 @@ PruebaChatbot-cpocket/
 
 ## Arquitectura del sistema
 
-![Arquitectura del sistema](arq_chatbotpng)
+![Arquitectura del sistema](arq_chatbot.png)
 
 ---
 
