@@ -44,6 +44,12 @@ PruebaChatbot-cpocket/
 
 ---
 
+## Arquitectura del sistema
+
+![Arquitectura del sistema](arq_chatbotpng)
+
+---
+
 ## 🚀 Instalación y Configuración
 
 ### Prerrequisitos
